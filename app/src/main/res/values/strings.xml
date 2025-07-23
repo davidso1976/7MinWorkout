@@ -4,4 +4,5 @@
     <string name="get_ready">GET READY FOR</string>
     <string name="weight_metrics_hint">WEIGHT (in kg)</string>
     <string name="weight_us_hint">WEIGHT (in pounds)</string>
+    <string name="upcoming_exercise">Upcoming Exercise:</string>
 </resources>

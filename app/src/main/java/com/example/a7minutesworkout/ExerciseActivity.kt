@@ -3,33 +3,31 @@ package com.example.a7minutesworkout
 import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7minutesworkout.databinding.ActivityExerciseBinding
 import com.example.a7minutesworkout.databinding.DialogCustomBackConfirmationBinding
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
+import androidx.core.net.toUri
+import com.example.a7minutesworkout.viewmodel.ExerciseViewModel
+import javax.inject.Inject
 
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+
+    @Inject lateinit var viewModel: ExerciseViewModel
+
     private var binding : ActivityExerciseBinding? = null
 
     private var restTimer : CountDownTimer? = null
-    private var restProgress = 0
 
     private var activityTimer : CountDownTimer? = null
     private var activityProgress = 0
-
-    private val restTimerDuration : Long = 1000
-    private val timerInterval : Long = 1000
-    private val exerciseTimerDuration : Long = 1000
 
     private var exerciseList : ArrayList<ExerciseModel>? = null
     private var currentExercisePosition = -1
@@ -40,8 +38,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var exerciseAdapter : ExerciseStatusAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as WorkOutApp).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityExerciseBinding.inflate(layoutInflater)
+        binding?.viewModel = viewModel
 
         setContentView(binding?.root)
         setSupportActionBar(binding?.toolbarExercise)
@@ -77,23 +77,22 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         customDialogForBackButton()
     }
 
     private fun setupExerciseStatusRecyclerView(){
-        binding?.rvExerciseStatus?.layoutManager = LinearLayoutManager(
-            this, LinearLayoutManager.HORIZONTAL, false)
         exerciseAdapter = ExerciseStatusAdapter(exerciseList!!)
         binding?.rvExerciseStatus?.adapter = exerciseAdapter
     }
 
     private fun setRestProgressBar(){
-        binding?.progressBar?.progress = restProgress
-        restTimer = object: CountDownTimer(restTimerDuration, timerInterval){
+        binding?.progressBar?.progress = 0
+        restTimer = object: CountDownTimer(viewModel.restingTime * 1000L, viewModel.timeInterval * 1000L){
             override fun onTick(millisUntilFinished: Long) {
-                restProgress++
-                binding?.progressBar?.progress = 10 - restProgress
-                binding?.tvTimer?.text = (10 - restProgress).toString()
+                val secondsUntilFinished = (millisUntilFinished/1000).toInt()
+                binding?.progressBar?.progress = viewModel.restingTime - secondsUntilFinished
+                binding?.tvTimer?.text = secondsUntilFinished.toString()
             }
 
             override fun onFinish() {
@@ -107,12 +106,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setActivityProgressBar(){
-        binding?.progressBarActivity?.progress = activityProgress
-        activityTimer = object: CountDownTimer(exerciseTimerDuration, timerInterval){
+        binding?.exerciseItem?.progressBarActivity?.progress = 0
+        activityTimer = object: CountDownTimer(viewModel.exerciseTimerDuration * 1000L, viewModel.timeInterval * 1000L){
             override fun onTick(millisUntilFinished: Long) {
-                activityProgress++
-                binding?.progressBarActivity?.progress = 30 - activityProgress
-                binding?.tvTimerActivity?.text = (30 - activityProgress).toString()
+                val secondsUntilFinished = (millisUntilFinished/1000).toInt()
+                binding?.exerciseItem?.progressBarActivity?.progress = viewModel.exerciseTimerDuration - secondsUntilFinished
+                binding?.exerciseItem?.tvTimerActivity?.text = secondsUntilFinished.toString()
             }
 
             override fun onFinish() {
@@ -136,8 +135,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val nextExercise = exerciseList!![currentExercisePosition + 1]
 
         try {
-            val soundURI = Uri.parse(
-                "android.resource://com.example.a7minutesworkout/" + R.raw.press_start)
+            val soundURI =
+                ("android.resource://com.example.a7minutesworkout/" + R.raw.press_start).toUri()
             player = MediaPlayer.create(applicationContext, soundURI)
             player?.isLooping = false
             player?.start()
@@ -148,14 +147,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         binding?.flRestView?.visibility = View.VISIBLE
         binding?.tvTitle?.visibility = View.VISIBLE
-        binding?.tvExerciseName?.visibility = View.INVISIBLE
-        binding?.flExerciseView?.visibility = View.INVISIBLE
-        binding?.ivImage?.visibility = View.INVISIBLE
+        binding?.exerciseItem?.tvExerciseName?.visibility = View.INVISIBLE
+        binding?.exerciseItem?.flExerciseView?.visibility = View.INVISIBLE
+        binding?.exerciseItem?.ivImage?.visibility = View.INVISIBLE
         binding?.llUpcomingExercise?.visibility = View.VISIBLE
         binding?.tvNextExerciseName?.text = nextExercise.getName()
         if(restTimer != null){
             restTimer?.cancel()
-            restProgress = 0
         }
         setRestProgressBar()
     }
@@ -164,9 +162,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val currentExercise = exerciseList!![currentExercisePosition]
         binding?.flRestView?.visibility = View.INVISIBLE
         binding?.tvTitle?.visibility = View.INVISIBLE
-        binding?.tvExerciseName?.visibility = View.VISIBLE
-        binding?.flExerciseView?.visibility = View.VISIBLE
-        binding?.ivImage?.visibility = View.VISIBLE
+        binding?.exerciseItem?.tvExerciseName?.visibility = View.VISIBLE
+        binding?.exerciseItem?.flExerciseView?.visibility = View.VISIBLE
+        binding?.exerciseItem?.ivImage?.visibility = View.VISIBLE
         binding?.llUpcomingExercise?.visibility = View.INVISIBLE
 
         if(activityTimer != null){
@@ -176,8 +174,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         speakOut(currentExercise.getName())
 
-        binding?.ivImage?.setImageResource(currentExercise.getImage())
-        binding?.tvExerciseName?.text = currentExercise.getName()
+        binding?.exerciseItem?.ivImage?.setImageResource(currentExercise.getImage())
+        binding?.exerciseItem?.tvExerciseName?.text = currentExercise.getName()
 
         setActivityProgressBar()
     }
@@ -187,7 +185,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding = null
         if(restTimer != null){
             restTimer?.cancel()
-            restProgress = 0
         }
         if(activityTimer != null){
             activityTimer?.cancel()
