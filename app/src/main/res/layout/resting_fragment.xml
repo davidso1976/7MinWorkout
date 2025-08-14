@@ -9,39 +9,28 @@
     </data>
 
     <LinearLayout
-        android:id="@+id/exerciseContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_gravity="center"
         android:orientation="vertical"
-        app:isVisible="@{!viewModel.restingInProgress}">
-
-        <ImageView
-            android:id="@+id/ivImage"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:scaleType="fitXY" />
-
+        app:isVisible="@{viewModel.restingInProgress}">
         <TextView
-            android:id="@+id/tvExerciseName"
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:text="@string/get_ready"
             android:textSize="@dimen/default_text_size"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:text="@{viewModel.currentExercise.name}"
-            tools:text="Exercise Name"
-            />
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
         <FrameLayout
-            android:id="@+id/flExerciseView"
+            android:id="@+id/flRestView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/item_circular_color_accent_border">
             <ProgressBar
-                android:id="@+id/progressBarActivity"
+                android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -49,8 +38,8 @@
                 android:background="@drawable/circular_progress_gray"
                 android:progressDrawable="@drawable/circular_progress_bar"
                 android:indeterminate="false"
-                android:max="@{viewModel.exerciseTimerDuration}"
-                android:progress="@{viewModel.exerciseProgress}"
+                android:max="@{viewModel.restingTime}"
+                android:progress="@{viewModel.restingProgress}"
                 android:rotation="-90" />
             <LinearLayout
                 android:layout_width="60dp"
@@ -59,15 +48,33 @@
                 android:layout_gravity="center"
                 android:gravity="center">
                 <TextView
-                    android:id="@+id/tvTimerActivity"
+                    android:id="@+id/tvTimer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/medium_text_size"
-                    android:text="@{viewModel.exerciseTimeUntilFinished}"
-                    tools:text="30"
+                    android:text="@{viewModel.restingTimeUntilFinished}"
+                    tools:text="10"
                     />
             </LinearLayout>
         </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/upcoming_exercise"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/small_text_size"
+            />
+        <TextView
+            android:id="@+id/tvNextExerciseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/default_text_size"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:text="@{viewModel.nextExercise.name}"
+            tools:text="Push Up" />
     </LinearLayout>
 </layout>

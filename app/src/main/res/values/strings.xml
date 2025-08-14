@@ -5,4 +5,6 @@
     <string name="weight_metrics_hint">WEIGHT (in kg)</string>
     <string name="weight_us_hint">WEIGHT (in pounds)</string>
     <string name="upcoming_exercise">Upcoming Exercise:</string>
+    <string name="exercise_completed_caps">EXERCISE COMPLETED</string>
+    <string name="no_data_available_caps">NO DATA AVAILABLE</string>
 </resources>

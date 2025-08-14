@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ExerciseActivity">
+        tools:context=".activity.ExerciseActivity">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarExercise"
             android:layout_width="match_parent"
@@ -21,91 +21,22 @@
             app:title="@string/app_name"
             app:titleTextColor="@color/colorPrimary"
             app:layout_constraintTop_toTopOf="parent" />
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/get_ready"
-            android:textSize="@dimen/default_text_size"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/flRestView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-        <FrameLayout
-            android:id="@+id/flRestView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/item_circular_color_accent_border"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarExercise">
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:background="@drawable/circular_progress_gray"
-                android:progressDrawable="@drawable/circular_progress_bar"
-                android:indeterminate="false"
-                android:max="@{viewModel.restingTime}"
-                android:rotation="-90" />
-            <LinearLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/item_circular_color_accent_background"
-                android:layout_gravity="center"
-                android:gravity="center">
-                <TextView
-                    android:id="@+id/tvTimer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/medium_text_size"
-                    tools:text="10"
-                    />
-            </LinearLayout>
-        </FrameLayout>
-        <LinearLayout
-            android:id="@+id/llUpcomingExercise"
+
+        <include android:id="@+id/restingView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/flRestView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/upcoming_exercise"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/small_text_size"
-                />
-            <TextView
-                android:id="@+id/tvNextExerciseName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/default_text_size"
-                android:layout_marginTop="10dp"
-                android:textStyle="bold"
-                tools:text="Push Up" />
-        </LinearLayout>
+            android:layout_height="match_parent"
+            layout="@layout/resting_fragment"
+            viewModel="@{viewModel}"
+            tools:visibility="visible" />
 
         <include
-            android:id="@+id/exercise_item"
+            android:id="@+id/exerciseItem"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             layout="@layout/exercise_item_fragment"
             viewModel="@{viewModel}"
-            tools:visibility="gone"
-            />
+            tools:visibility="gone" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvExerciseStatus"
             android:layout_width="wrap_content"

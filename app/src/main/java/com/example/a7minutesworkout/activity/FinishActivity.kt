@@ -1,12 +1,17 @@
-package com.example.a7minutesworkout
+package com.example.a7minutesworkout.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
+import com.example.a7minutesworkout.database.HistoryDao
+import com.example.a7minutesworkout.WorkOutApp
+import com.example.a7minutesworkout.database.HistoryDatabase
 import com.example.a7minutesworkout.databinding.ActivityFinishBinding
+import com.example.a7minutesworkout.model.HistoryEntity
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 class FinishActivity : AppCompatActivity() {
 
@@ -30,8 +35,7 @@ class FinishActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        val historyDao = (application as WorkOutApp).db.historyDao()
-        addDateToDatabase(historyDao)
+        addDateToDatabase()
     }
 
     private fun backToMainActivity(){
@@ -43,15 +47,15 @@ class FinishActivity : AppCompatActivity() {
         binding = null
     }
 
-    private fun addDateToDatabase(historyDao: HistoryDao){
+    private fun addDateToDatabase(){
         val c = Calendar.getInstance()
         val dateTime = c.time
 
         val sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.getDefault())
         val date = sdf.format(dateTime)
 
-        lifecycleScope.launch {
-            historyDao.insert(HistoryEntity(date))
-        }
+//        lifecycleScope.launch {
+//            historyDatabase.historyDao().insert(HistoryEntity(date))
+//        }
     }
 }

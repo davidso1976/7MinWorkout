@@ -1,50 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HistoryActivity">
-    <androidx.appcompat.widget.Toolbar
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/toolbarHistoryActivity"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="#FFFFFF" />
-    <!--TODO(Step 1 : Added a RecyclerView to show the list of completed dates in the History Screen UI.)-->
-    <!--START-->
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/toolbarHistoryActivity"
-        android:id="@+id/tvHistory"
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.a7minutesworkout.viewmodel.HistoryViewModel" />
+    </data>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:text="EXERCISE COMPLETED"
-        android:textSize="18sp"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        app:layout_constraintTop_toBottomOf="@id/tvHistory"
-        android:id="@+id/rvHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        <androidx.appcompat.widget.Toolbar
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/toolbarHistoryActivity"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="#FFFFFF" />
 
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/toolbarHistoryActivity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/tvNoDataAvailable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="NO DATA AVAILABLE"
-        android:textColor="#212121"
-        android:textSize="18sp"
-        android:visibility="gone"
-        tools:visibility="visible" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:isVisible="@{!viewModel.showNoData}">
+            <TextView
+                app:layout_constraintTop_toBottomOf="@id/toolbarHistoryActivity"
+                android:id="@+id/tvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/exercise_completed_caps"
+                android:textSize="18sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                app:layout_constraintTop_toBottomOf="@id/tvHistory"
+                android:id="@+id/rvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:visibility="visible"
+                tools:listitem="@layout/item_history_row" />
+
+        </LinearLayout>
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/toolbarHistoryActivity"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/tvNoDataAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_data_available_caps"
+            android:textColor="#212121"
+            android:textSize="18sp"
+            app:isVisible="@{viewModel.showNoData}"/>
+    </LinearLayout>
+</layout>
