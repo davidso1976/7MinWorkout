@@ -51,10 +51,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         lifecycleScope.launch (block = uiEventsBlock)
 
         setContentView(binding?.root)
-        setSupportActionBar(binding?.toolbarExercise)
-        if(supportActionBar != null) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
 
         tts = TextToSpeech(this, this)
         binding?.toolbarExercise?.setNavigationOnClickListener{

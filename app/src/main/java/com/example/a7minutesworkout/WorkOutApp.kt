@@ -1,11 +1,8 @@
 package com.example.a7minutesworkout
 
 import android.app.Application
-import android.content.Context
 import com.example.a7minutesworkout.activity.ExerciseActivity
 import com.example.a7minutesworkout.activity.History
-import com.example.a7minutesworkout.database.HistoryDao
-import com.example.a7minutesworkout.database.HistoryDatabase
 import com.example.a7minutesworkout.modules.ExerciseModule
 import com.example.a7minutesworkout.modules.OkHttpModule
 import com.example.a7minutesworkout.ui.event.ExerciseUIEvent

@@ -1,6 +1,5 @@
 package com.example.a7minutesworkout.modules
 
-import com.example.a7minutesworkout.database.HistoryDatabase
 import com.example.a7minutesworkout.repository.ExerciseAPIService
 import com.example.a7minutesworkout.repository.ExerciseRepository
 import com.example.a7minutesworkout.ui.event.ExerciseUIEvent

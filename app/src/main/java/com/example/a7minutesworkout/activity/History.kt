@@ -2,20 +2,11 @@ package com.example.a7minutesworkout.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7minutesworkout.ui.adapter.HistoryAdapter
-import com.example.a7minutesworkout.database.HistoryDao
 import com.example.a7minutesworkout.WorkOutApp
-import com.example.a7minutesworkout.database.HistoryDatabase
 import com.example.a7minutesworkout.databinding.ActivityHistoryBinding
-import com.example.a7minutesworkout.model.HistoryEntity
 import com.example.a7minutesworkout.viewmodel.HistoryViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class History : AppCompatActivity() {
 
@@ -36,11 +27,6 @@ class History : AppCompatActivity() {
         lifecycle.addObserver(viewModel)
 
         setContentView(binding?.root)
-        setSupportActionBar(binding?.toolbarHistoryActivity)
-        if(supportActionBar != null) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.title = "History"
-        }
 
         binding?.toolbarHistoryActivity?.setNavigationOnClickListener{
             onBackPressed()

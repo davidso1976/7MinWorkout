@@ -1,10 +1,15 @@
 package com.example.a7minutesworkout.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import android.os.Parcelable
+import androidx.annotation.Keep
+import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "history-table")
+
+@Keep
+@JsonClass(generateAdapter = true)
+@Parcelize
+
 data class HistoryEntity(
-    @PrimaryKey
     val date:String
-)
+) : Parcelable
