@@ -12,7 +12,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.a7minutesworkout.model.ExerciseModel
 import com.example.a7minutesworkout.repository.ExerciseRepository
 import com.example.a7minutesworkout.ui.event.ExerciseUIEvent
-import com.example.a7minutesworkout.utils.DefaultValues
 import com.example.a7minutesworkout.utils.isInRange
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -28,10 +27,10 @@ class ExerciseViewModel : ViewModel(), DefaultLifecycleObserver  {
     lateinit var exerciseRepository: ExerciseRepository
 
     val timeInterval = 100L
-    val restingTime = 2
-    val exerciseTimerDuration = 3
-    val currentExerciseIdx = MutableLiveData(-1)
-    val nextExerciseIdx = MutableLiveData(0)
+    val restingTime = 5
+    val exerciseTimerDuration = 10
+    private val currentExerciseIdx = MutableLiveData(-1)
+    private val nextExerciseIdx = MutableLiveData(0)
 
 
     val restingProgress = MutableLiveData(0)
@@ -39,7 +38,7 @@ class ExerciseViewModel : ViewModel(), DefaultLifecycleObserver  {
     val restingTimeUntilFinished = MutableLiveData(restingTime.toString())
     val exerciseProgress = MutableLiveData(0)
     val exerciseTimeUntilFinished = MutableLiveData(restingTime.toString())
-    val defaultList = MutableLiveData<List<ExerciseModel>>()
+    private val defaultList = MutableLiveData<List<ExerciseModel>>()
 
     val exerciseList = MediatorLiveData<List<ExerciseModel>?>().apply {
         var oldList :  List<ExerciseModel> = emptyList()
@@ -133,7 +132,7 @@ class ExerciseViewModel : ViewModel(), DefaultLifecycleObserver  {
     fun advanceNextExercise() {
         val listSize = exerciseList.value?.size ?: -1
         val nextIdx = nextExerciseIdx.value ?: -1
-        if(nextIdx >= listSize) {
+        if(nextIdx + 1 >= listSize) {
             triggerUIEvent(ExerciseUIEvent.FinishExercise)
         } else {
             nextExerciseIdx.value = currentExerciseIdx.value?.plus(1) ?: 0
@@ -170,7 +169,6 @@ class ExerciseViewModel : ViewModel(), DefaultLifecycleObserver  {
         with(owner.lifecycleScope) {
             launch(block = exerciseUIEventBusBlock)
         }
-        setupDefaultList()
     }
 
     private fun triggerUIEvent(event: ExerciseUIEvent) = viewModelScope.launch{
@@ -179,16 +177,20 @@ class ExerciseViewModel : ViewModel(), DefaultLifecycleObserver  {
         }
     }
 
-    private fun setupDefaultList() {
-        defaultList.value = DefaultValues.defaultExerciseList()
-    }
-
     fun fetchExerciseList() = viewModelScope.launch {
         exerciseRepository.fetchExerciseList().fold({
             Log.d("API", "Error fetching exercise List error = $it")
         }, {
             Log.d("API", "Successfully loading exerciseList = $it")
+            it.data?.exerciseList?.let { list ->
+                defaultList.postValue(list)
+                beginWorkOut()
+            }
         })
+    }
+
+    private fun beginWorkOut() {
+        startResting()
     }
 
 }

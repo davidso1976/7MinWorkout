@@ -123,13 +123,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         } catch(e : Exception){
             e.printStackTrace()
         }
-        viewModel.startResting()
     }
-
-//    private fun setupActivityView(){
-//
-//        speakOut(currentExercise.getName())
-//    }
 
     override fun onDestroy() {
         super.onDestroy()

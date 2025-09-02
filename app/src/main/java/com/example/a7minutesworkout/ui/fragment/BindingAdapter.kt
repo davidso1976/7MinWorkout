@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
+import com.bumptech.glide.Glide
 
 object BindingAdapter {
 
@@ -20,6 +21,17 @@ object BindingAdapter {
     @BindingAdapter("app:srcDrawable")
     fun setDrawableSrc(view: ImageView, @DrawableRes src: Int) {
         view.setImageResource(src)
+    }
+
+    @JvmStatic
+    @BindingAdapter("app:srcUrl")
+    fun setImageSrcURL(view: ImageView, src: String?) {
+        if(!src.isNullOrEmpty()) {
+            Glide.with(view)
+                .load(src)
+                .into(view)
+        }
+
     }
 
 }

@@ -21,7 +21,8 @@
             android:id="@+id/ivImage"
             android:layout_width="match_parent"
             android:layout_height="400dp"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            app:srcUrl="@{viewModel.currentExercise.image}"/>
 
         <TextView
             android:id="@+id/tvExerciseName"
