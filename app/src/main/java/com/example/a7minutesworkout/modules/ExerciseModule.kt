@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import lib.events.EventBus
+import lib.utils.ContentConverterFactory
 import lib.utils.buildRetrofit
 import okhttp3.OkHttpClient
 import javax.inject.Singleton
@@ -27,7 +28,7 @@ open class ExerciseModule {
     @Provides
     @Singleton
     open fun provideExerciseAPIService(okHttpClient: OkHttpClient, moshi: Moshi) : ExerciseAPIService {
-        return buildRetrofit(BASE_URL, okHttpClient)
+        return buildRetrofit(BASE_URL, okHttpClient, ContentConverterFactory(moshi))
     }
 
     @Provides
@@ -49,7 +50,7 @@ open class ExerciseModule {
     }
 
     companion object {
-        const val BASE_URL = "http://localhost:8080/"
+        const val BASE_URL = "http://192.168.1.95:8080/"
     }
 
 }

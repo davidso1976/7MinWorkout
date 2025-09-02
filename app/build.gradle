@@ -57,7 +57,8 @@ dependencies {
 
     //Retrofit
     implementation(libs.retrofit)
-    implementation(libs.retrofit.moshi)
+    //noinspection KaptUsageInsteadOfKsp
+    kapt(libs.moshi.codegen)
 
     //OkHttp
     implementation(libs.okhttp)
